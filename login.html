@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Prescription Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .login-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 400px;
+            margin: 20px;
+        }
+        
+        .login-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .login-header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .login-form {
+            padding: 40px 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        
+        .password-toggle {
+            position: relative;
+        }
+        
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #6c757d;
+            cursor: pointer;
+            padding: 0;
+        }
+        
+        .toggle-password:hover {
+            color: #667eea;
+        }
+        
+        .form-check {
+            margin-bottom: 20px;
+        }
+        
+        .form-check-input:checked {
+            background-color: #667eea;
+            border-color: #667eea;
+        }
+        
+        .btn-login {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 500;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+        
+        .btn-login:disabled {
+            opacity: 0.7;
+            transform: none;
+        }
+        
+        .login-footer {
+            padding: 20px 30px;
+            text-align: center;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .login-footer a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .alert {
+            border-radius: 8px;
+            border: none;
+            margin-bottom: 20px;
+        }
+        
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+        
+        .loading {
+            position: relative;
+        }
+        
+        .loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin-left: -10px;
+            margin-top: -10px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .register-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1><i class="bi bi-heart-pulse me-2"></i>Prescription Management System</h1>
+        </div>
+        
+        <div class="login-form">
+            <!-- Error message placeholder (would be populated by PHP) -->
+            <div class="alert alert-danger" id="errorMessage" style="display: none;">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                <span id="errorText">Invalid email or password.</span>
+            </div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">
+                        <i class="bi bi-envelope me-2"></i>Email Address
+                    </label>
+                    <input type="email" class="form-control" id="email" name="email" required 
+                           placeholder="Enter your email address">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">
+                        <i class="bi bi-lock me-2"></i>Password
+                    </label>
+                    <div class="password-toggle">
+                        <input type="password" class="form-control" id="password" name="password" required
+                               placeholder="Enter your password">
+                        <button type="button" class="toggle-password" onclick="togglePassword()">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                    <label class="form-check-label" for="remember">
+                        <i class="bi bi-check-circle me-2"></i>Remember me
+                    </label>
+                </div>
+                
+                <button type="submit" class="btn btn-login" id="loginButton">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                </button>
+            </form>
+            
+            <div class="register-link">
+                <p class="mb-0">Don't have an account? 
+                    <a href="register.html">Register here</a>
+                </p>
+            </div>
+        </div>
+        
+        <div class="login-footer">
+            <a href="forgot-password.html">
+                <i class="bi bi-question-circle me-2"></i>Forgot Password?
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleButton = document.querySelector('.toggle-password i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleButton.classList.remove('bi-eye');
+                toggleButton.classList.add('bi-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleButton.classList.remove('bi-eye-slash');
+                toggleButton.classList.add('bi-eye');
+            }
+        }
+        
+        // Form submission handling
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const button = document.getElementById('loginButton');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Basic validation
+            if (!email || !password) {
+                showError('Please enter both email and password.');
+                return;
+            }
+            
+            // Simulate login process
+            button.classList.add('loading');
+            button.disabled = true;
+            
+            // Simulate API call
+            setTimeout(() => {
+                // Demo login - in real app this would be a server call
+                if (email === 'admin@example.com' && password === 'password') {
+                    // Redirect to admin dashboard
+                    window.location.href = 'admin/dashboard.html';
+                } else if (email === 'doctor@example.com' && password === 'password') {
+                    // Redirect to doctor dashboard
+                    window.location.href = 'doctor/dashboard.html';
+                } else if (email === 'patient@example.com' && password === 'password') {
+                    // Redirect to patient dashboard
+                    window.location.href = 'patient/dashboard.html';
+                } else {
+                    showError('Invalid email or password.');
+                    button.classList.remove('loading');
+                    button.disabled = false;
+                }
+            }, 1500);
+        });
+        
+        function showError(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+            errorText.textContent = message;
+            errorMessage.style.display = 'block';
+            
+            // Hide error after 5 seconds
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Remember me functionality
+        const rememberCheckbox = document.getElementById('remember');
+        const emailInput = document.getElementById('email');
+        
+        // Check if there's a saved email
+        const savedEmail = localStorage.getItem('rememberedEmail');
+        if (savedEmail) {
+            emailInput.value = savedEmail;
+            rememberCheckbox.checked = true;
+        }
+        
+        // Save email when checkbox is checked
+        rememberCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                localStorage.setItem('rememberedEmail', emailInput.value);
+            } else {
+                localStorage.removeItem('rememberedEmail');
+            }
+        });
+        
+        // Update saved email when input changes
+        emailInput.addEventListener('input', function() {
+            if (rememberCheckbox.checked) {
+                localStorage.setItem('rememberedEmail', this.value);
+            }
+        });
+    </script>
+</body>
+</html> 
